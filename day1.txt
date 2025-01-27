@@ -1,39 +1,20 @@
-userAge = input("Please enter your Age: ")
 
-age=int(userAge)
-if age<=0:
-    print('Enter Valid Age')
-elif age <=18:
-    print("You are not allowed to vote")
-elif age>18 and age<70:
-    print("You are allowed")
-else:
-    print("You are Senior citizon") 
+class Student:
+    def __init__(self, rollno,name,subject,totalMarks):
+        self.name = name
+        self.rollno = rollno
+        self.subject = subject
+        self.totalMarks = totalMarks
     
--------
+    def displayData(self):
+        print(f"the name is {self.name} and subject is {self.subject}")
+    
+    def __str__(self):
+        return f"{self.name} and {self.rollno} ad totalMArks is {self.totalMarks}"
 
+sanya= Student("199","sanya","Physics","89")
 
-#[] -> array
-userNames=['admin','manager','qa']
+suresh= Student("198","suresh","Maths","90")
 
-for uname in userNames:
-    print(uname)
-
-users=['user1','user2','user3']
-
-for i ,data in enumerate(users):
-    print(i , data)
-
-#------------------------------
-
-projectTypes=['HRMS','IT','Banking','Finance']
-
-dummy=[]
-
-for project in projectTypes:
-    if project =='Banking':
-        continue
-    else:
-        print(f"Developing Project {project}")
-dummy.append('Banking')
-print(f" Developed {dummy}")
+print(sanya)
+print(suresh.displayData())
