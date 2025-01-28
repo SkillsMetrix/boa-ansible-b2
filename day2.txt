@@ -1,95 +1,89 @@
+
 from pydantic import BaseModel
-from typing import Optional
-#decalare model
+# contains what you expect from the user
+class Base(BaseModel):
+    name: str
+    sclass: str
+    section: str
+---------------
 
-class Post(BaseModel):
-    title:str
-    content:str
-    published: bool = True
-    rating: Optional[int] = None
+# schema reprenstation
+from sqlalchemy import Column,Integer,String
+
+from .database import Base
+
+class Student(Base):
+    __tablename__="STUDENT"
+
+    name=Column(String,primary_key=True)
+    sclass=Column(String)
+    section=Column(String)
+
+------------------------
+
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import sessionmaker
+
+SQL_DB = "sqlite:///./mytest.db"
+
+engine = create_engine(
+    SQL_DB, connect_args={"check_same_thread": False}
+
+)
+SessioLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
 
 
--------
+def get_connection():
+    db = SessioLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-# importing package
+-------------
+
+
+
+from fastapi import FastAPI, HTTPException, status, APIRouter,Depends
+from fastapi.params import Body
+from sqlalchemy.orm import Session
+from random import randrange
+from .. import schema,models
+from .. database import engine,get_connection
+
+
+router = APIRouter(tags=["USER APPLICATION"])
+
+
+
+
+# insert new records
+
+
+@router.post("/addpost", status_code=status.HTTP_201_CREATED)
+def registerPost(student: schema.Base,db:Session=Depends(get_connection)):
+    new_post=models.Base(**student.dict())
+    db.add(new_post)
+    db.commit()
+    db.refresh(new_post)
+    return {"data": new_post}
+
+
+----------------
+
+
+
 from fastapi import FastAPI
 from . routers import post
- 
-app= FastAPI()
+from .database import engine,get_connection
+from . import models,schema
+
+
+models.Base.metadata.create_all(bind=engine)
+app = FastAPI()
+
 
 app.include_router(post.router)
-
---------
-
-from fastapi import FastAPI,HTTPException,status,APIRouter
-from fastapi.params import Body
-from random import randrange
-from .. import schema
-
-router=APIRouter(tags=["POST APPLICATION"])
-
-my_post=[{"id":101,"title":"Demo App","content":"demo content"}]
-
-#global logic for search
-def findPost(id):
-    for p in my_post:
-        if p['id']== id:
-            return p
-def findPost2(id):
-    for i, p in enumerate(my_post):
-        if p['id']== id:
-            return i
-
-
-
-#get request
-
-@router.get("/showusers")
-def showUsers():
-    return {"message":my_post}
-#post request
-
-@router.post("/adduser",status_code=status.HTTP_201_CREATED)
-def addUser(payload: schema.Post):
-    udata=payload.dict()
-    udata['id']=randrange(0,1000)
-    my_post.append(udata)
-    return{ "userdata":payload}
-
-#get with specific id
-@router.get("/findpost/{id}")
-def findById(id:int):
-    print(id)
-    post=findPost(id)
-    if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
-    else:
-
-        return {"Post found ":post}
-
-
-#delete with specific id
-@router.delete("/deletepost/{id}")
-def deleteById(id:int):
-    
-    post=findPost2(id)
-    if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
-    else:
-        my_post.pop(post)
-        return {"Post deleted ":post}
-
-
-#delete with specific id
-@router.put("/updatepost/{id}")
-def updateById(id:int,payload:schema.Post):
-    
-    post=findPost2(id)
-    if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
-    else:
-        post_dict=payload.dict()
-        post_dict['id']=id
-        my_post[post]=post_dict
-        return {"Post updated ":post}
-
