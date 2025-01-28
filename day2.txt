@@ -1,0 +1,8 @@
+# importing package
+from fastapi import FastAPI
+# creating object
+app= FastAPI()
+
+@app.get("/welcome")
+def showWelcome():
+    return {"message":"welcome to FastAPI"}
