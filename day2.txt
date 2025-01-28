@@ -13,6 +13,10 @@ def findPost(id):
     for p in my_post:
         if p['id']== id:
             return p
+def findPost2(id):
+    for i, p in enumerate(my_post):
+        if p['id']== id:
+            return i
 
 
 #decalare model
@@ -45,4 +49,29 @@ def findById(id:int):
 
         return {"Post found ":post}
 
+
+#delete with specific id
+@app.delete("/deletepost/{id}")
+def deleteById(id:int):
+    
+    post=findPost2(id)
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
+    else:
+        my_post.pop(post)
+        return {"Post deleted ":post}
+
+
+#delete with specific id
+@app.put("/updatepost/{id}")
+def updateById(id:int,payload:Post):
+    
+    post=findPost2(id)
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
+    else:
+        post_dict=payload.dict()
+        post_dict['id']=id
+        my_post[post]=post_dict
+        return {"Post updated ":post}
 
