@@ -1,5 +1,5 @@
 # importing package
-from fastapi import FastAPI
+from fastapi import FastAPI,HTTPException,status
 from fastapi.params import Body
 from pydantic import BaseModel
 from random import randrange
@@ -27,7 +27,7 @@ def showUsers():
     return {"message":my_post}
 #post request
 
-@app.post("/adduser")
+@app.post("/adduser",status_code=status.HTTP_201_CREATED)
 def addUser(payload: Post):
     udata=payload.dict()
     udata['id']=randrange(0,1000)
@@ -39,7 +39,10 @@ def addUser(payload: Post):
 def findById(id:int):
     print(id)
     post=findPost(id)
-    return {"Post found ":post}
+    if not post:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Given ID not found")
+    else:
 
+        return {"Post found ":post}
 
 
