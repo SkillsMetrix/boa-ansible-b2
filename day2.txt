@@ -6,21 +6,40 @@ from random import randrange
 # creating object
 app= FastAPI()
 #dummy record
-my_post=[{"id":"101","title":"Demo App","content":"demo content"}]
+my_post=[{"id":101,"title":"Demo App","content":"demo content"}]
+
+#global logic for search
+def findPost(id):
+    for p in my_post:
+        if p['id']== id:
+            return p
+
+
 #decalare model
+
 class Post(BaseModel):
     title:str
     content:str
 #get request
+
 @app.get("/showusers")
 def showUsers():
     return {"message":my_post}
 #post request
+
 @app.post("/adduser")
 def addUser(payload: Post):
     udata=payload.dict()
     udata['id']=randrange(0,1000)
     my_post.append(udata)
     return{ "userdata":payload}
+
+#get with specific id
+@app.get("/findpost/{id}")
+def findById(id:int):
+    print(id)
+    post=findPost(id)
+    return {"Post found ":post}
+
 
 
