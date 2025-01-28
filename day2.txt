@@ -1,8 +1,17 @@
 # importing package
 from fastapi import FastAPI
+from fastapi.params import Body
 # creating object
 app= FastAPI()
+#dummy record
+my_post=[{"id":"101","title":"Demo App","content":"demo content"}]
+#get request
+@app.get("/showusers")
+def showUsers():
+    return {"message":my_post}
+#post request
+@app.post("/adduser")
+def addUser(payload: dict=Body(...)):
+    return{ "userdata":payload}
 
-@app.get("/welcome")
-def showWelcome():
-    return {"message":"welcome to FastAPI"}
+
