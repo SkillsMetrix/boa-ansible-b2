@@ -1,0 +1,27 @@
+
+provider "aws" {
+  alias = "ue1"
+  region = "us-west-2"
+}
+provider "aws" {
+  alias = "uw2"
+  region = "us-west-2"
+}
+
+resource "aws_instance" "ex1" {
+  ami = "ami-0a897ba00eaed7398"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "am-linux"
+  }
+  provider = "aws.ue1"
+  
+}
+resource "aws_instance" "ex2" {
+  ami = "ami-00c257e12d6828491"
+  instance_type = "t2.micro"
+  tags = {
+    Name = "am-ubuntu"
+  }
+  provider = "aws.uw2"
+}
