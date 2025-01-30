@@ -1,0 +1,9 @@
+ ssh-keygen
+ 1197  cd keyfile
+ 1198  ssh-copy-id -f "-o IdentityFile boa-b2.pem" ubuntu@44.246.48.243
+ 1199  ssh -o ' IdentityFile boa-b2.pem' 'ubuntu@44.246.48.243'
+ 1200  ssh ubuntu@44.246.48.243
+ 1201  clear
+ 1202  ssh-copy-id -f "-o IdentityFile boa-b2.pem" ubuntu@44.226.202.118
+ 1203  ssh -o ' IdentityFile boa-b2.pem' 'ubuntu@44.226.202.118'
+ 1204  ssh ubuntu@44.226.202.118
