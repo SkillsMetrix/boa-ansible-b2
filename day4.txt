@@ -7,3 +7,14 @@
  1202  ssh-copy-id -f "-o IdentityFile boa-b2.pem" ubuntu@44.226.202.118
  1203  ssh -o ' IdentityFile boa-b2.pem' 'ubuntu@44.226.202.118'
  1204  ssh ubuntu@44.226.202.118
+
+
+--------
+
+- hosts: web
+  become: true
+  tasks:
+    - name: Create Directory on web instance
+      file:
+        path: ./demo-directory
+        state: directory
