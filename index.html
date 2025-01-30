@@ -46,3 +46,20 @@
     </footer>
 </body>
 </html>
+
+
+---------
+
+- hosts: web
+  become: true
+  tasks:
+    - name: install apache server
+      become: true
+      apt: name=apache2 update_cache=yes state=latest
+    - name: copy the index html page
+      ansible.builtin.copy:
+        src: index.html
+        dest: /var/www/html
+        owner: root
+        group: root
+        mode: '0644'
