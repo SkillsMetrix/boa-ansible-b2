@@ -56,3 +56,21 @@
     - copy_result.failed == true
   any_errors_fatal: true
 
+-------
+
+
+ cd vaultdemo
+ 1305  clear
+ 1306  ansible-vault create group_vars/my_vault.yml
+ 1307  ansible-vault view  group_vars/my_vault.yml
+ 1308  ansible-playbook -i ../../inventory.ini vault-playbook.yml
+ 1309  clear
+ 1310  ansible-playbook -i ../../inventory.ini vault-playbook.yml -e @group_vars/my_vault.yml
+ 1311  ansible-playbook -i ../../inventory.ini vault-playbook.yml -e @group_vars/my_vault.yml --ask-vault-pass
+ 1312  clear
+ 1313  clear
+ 1314  ansible-vault rekey group_vars/my_vault.yml
+ 1315  openssl rand -base64 2048 > pass_file/ansible-vault.pass
+ 1316  ansible-vault create group_vars/my_vault_with_base64_pass.yml --vault-password-file=pass_file/ansible-vault.pass
+ 1317  ansible-vault view group_vars/my_vault_with_base64_pass.yml --vault-password-file=pass_file/ansible-vault.pass
+ 1318  ansible-playbook -i ../../inventory.ini vault-playbook.yml -e @group_vars/my_vault_with_base64_pass.yml --vault-password-file=pass_file/ansible-vault.pass
