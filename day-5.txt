@@ -29,3 +29,30 @@
   debug:
     var: test_file_content.stdout
   when: test_file_content.stdout.find('hi') !=-1
+
+
+---------
+
+
+- name: update apt and install nginx
+  apt:
+    name: nginx
+    state: latest
+    update_cache: yes
+
+- name: copy new index html
+  template: src=files/index2.html dest=/usr/share/nginx/html/index.html
+  ignore_errors: true
+
+- name: update new index html
+  template: src=files/updated2.html dest=/usr/share/nginx/html/index.html
+  register: copy_result
+  ignore_errors: true
+  notify: 
+    - Restart Nginx
+- name: show when failed
+  template: src=files/updated2.html dest=/usr/share/nginx/html/index.html
+  failed_when:
+    - copy_result.failed == true
+  any_errors_fatal: true
+
