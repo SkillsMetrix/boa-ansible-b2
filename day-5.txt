@@ -17,3 +17,15 @@
   debug:
     var: ansible_facts['kernel_version']
   when: ansible_facts['os_family'] == "Debian" and ansible_facts['distribution_major_version'] | int >=20
+
+
+
+# how to register the var and use on later stages
+- name: print the details
+  ansible.builtin.command: cat /home/ubuntu/test-file.txt
+  register: test_file_content
+
+- name: use the condition
+  debug:
+    var: test_file_content.stdout
+  when: test_file_content.stdout.find('hi') !=-1
