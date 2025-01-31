@@ -1,58 +1,19 @@
-- name: vardemo app
-  hosts: web
-  become: yes
-  remote_user: ubuntu
-  roles:
-    - vardemo
-  vars:
-    main_playbbk_variable: "demo vars"
-    is_enabled: true
-    #list vars
-    fruits:
-        - apple
-        - oranges
-        - banana
-    fruit_prices:
-        apple: 0.5
-        oranges: 0.25
-        banana: 0.75
-    # nested vars
-    fruit_basket:
-        - name: john
-          fruits:
-            - apple
-            - orange
-        - name: jane
-          fruits:
-            - apple
-            - orange
-            - banana
-    #load the data from external files
-    var_files:
-        - my_vars.yml
-  tasks:
-    - name: String var
-      debug:
-          var: main_playbbk_variable
-    - name: Boolean demo
-      debug:
-        msg: "Value is true"
-      when: is_enabled
-    - name: List var
-      debug:
-          var: fruits
-    - name: list var position
-      debug:
-          var: fruits[1]
-    - name: dict var 
-      debug:
-          var: fruit_prices
+- name: Install Apache Server
+  apt:
+    name: apache2
+    state: absent
+  when: install_apache_flag
 
-    - name: dict var position specific field
-      debug:
-          var: fruit_prices.apple
-    - name: external var
-      debug:
-          var: vars_from_my_vars_yml
-    
-    
+# multiple conditions
+
+- name: checking multiple conditions
+  debug:
+    var: ansible_facts['kernel_version']
+  when:
+    - ansible_facts['os_family'] == "Debian"
+    - ansible_facts['distribution_major_version'] =="24"
+
+- name: checking multiple conditions
+  debug:
+    var: ansible_facts['kernel_version']
+  when: ansible_facts['os_family'] == "Debian" and ansible_facts['distribution_major_version'] | int >=20
