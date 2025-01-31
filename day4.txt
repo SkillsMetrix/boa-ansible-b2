@@ -18,3 +18,52 @@
       file:
         path: ./demo-directory
         state: directory
+------------------------------
+
+
+- name: Example Ansible
+  hosts: all
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - custom-role
+
+  vars:
+    # 1. String Variable
+    main_playbook_variable: "foo"
+
+    # 2. Boolean Variable
+    is_enabled: false
+
+    # 3. List Variable
+    fruits:
+      - apple
+      - banana
+      - orange
+
+    # 4. Dictionary Variable
+    fruit_prices:
+      apple: 0.5
+      banana: 0.25
+      orange: 0.75
+
+    # 5. Referencing nested variable
+    fruit_basket:
+      - name: John
+        fruits:
+          - apple
+          - orange
+      - name: Jane
+        fruits:
+          - banana
+          - apple
+          - orange
+
+  # 6. Variable from the my-vars.yml
+  vars_files:
+    - my-vars.yml
+
+  tasks:
+    - name: String Variable from - main_playbook_variable
+      debug:
+        var: main_playbook_variable
