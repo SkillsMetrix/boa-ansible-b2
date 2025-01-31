@@ -6,7 +6,7 @@
     - vardemo
   vars:
     main_playbbk_variable: "demo vars"
-    is_enabled: false
+    is_enabled: true
     #list vars
     fruits:
         - apple
@@ -30,10 +30,29 @@
     #load the data from external files
     var_files:
         - my_vars.yml
-    tasks:
-        - name: String variable
-          debug:
-            var: main_playbbk_variable
-        
+  tasks:
+    - name: String var
+      debug:
+          var: main_playbbk_variable
+    - name: Boolean demo
+      debug:
+        msg: "Value is true"
+      when: is_enabled
+    - name: List var
+      debug:
+          var: fruits
+    - name: list var position
+      debug:
+          var: fruits[1]
+    - name: dict var 
+      debug:
+          var: fruit_prices
 
+    - name: dict var position specific field
+      debug:
+          var: fruit_prices.apple
+    - name: external var
+      debug:
+          var: vars_from_my_vars_yml
+    
     
