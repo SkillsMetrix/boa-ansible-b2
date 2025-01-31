@@ -1,0 +1,5 @@
+- name: Install Apache Server
+  apt:
+    name: apache2
+    state: absent
+  when: install_apache_flag

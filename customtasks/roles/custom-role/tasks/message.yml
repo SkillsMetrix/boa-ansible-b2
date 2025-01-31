@@ -1,0 +1,4 @@
+- name: set message file
+  copy:
+    content: "{{message}}"
+    dest: /var/www/html/index.html

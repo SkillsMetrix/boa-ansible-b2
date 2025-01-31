@@ -1,0 +1,9 @@
+# its taking the res of installng packages on hosts
+- name: install all the required packages
+  apt:
+    name:
+      - nginx
+      - git
+      - curl
+    state: latest
+    update_cache: yes

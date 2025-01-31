@@ -1,0 +1,7 @@
+- name: custom roles and imports
+  hosts: web
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - custom-role
+    - install-apache
