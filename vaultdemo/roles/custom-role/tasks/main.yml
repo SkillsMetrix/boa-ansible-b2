@@ -1,0 +1,3 @@
+- name: Show vault variable value
+  debug:
+    var: my_secret_new

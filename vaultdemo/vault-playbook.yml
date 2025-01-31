@@ -1,0 +1,6 @@
+- name: conditional app
+  hosts: db
+  become: yes
+  remote_user: ubuntu
+  roles:
+    - custom-role
