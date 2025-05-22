@@ -1,0 +1,30 @@
+
+
+    - name: install apache server and check status
+      apt:
+        name:
+          - apache2
+        update_cache: yes
+        state: latest
+
+    - name: start services
+      service:
+        name: apache2
+        state: started
+
+    - name: check installation status
+      command: systemctl status apache2
+      register: apache_status
+
+    - name: print the value
+      debug:
+        msg: "{{apache_status.stdout}}"
+
+
+
+
+    - name: change the default HTML Page
+      copy:
+        src: index.html
+        dest: /var/www/html
+        mode: '0644'

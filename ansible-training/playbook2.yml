@@ -1,0 +1,10 @@
+
+- hosts: web
+  become: true
+  tasks:
+    - name: install apache server
+      apt:
+        name:
+          - apache2
+        update_cache: yes
+        state: latest

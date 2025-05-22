@@ -1,0 +1,9 @@
+
+- hosts: web
+  become: true
+  tasks:
+    - name: change the default HTML Page
+      copy:
+        src: index.html
+        dest: /var/www/html
+        mode: '0644'

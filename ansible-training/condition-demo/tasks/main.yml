@@ -1,0 +1,24 @@
+- name: Uninstall apache web Server
+  apt:
+    name: apache2
+    state: absent
+  when: install_apache_flag
+
+- name: check the OS status
+  debug:
+    var: ansible_facts['distribution_major_version']
+    
+  when:
+    - ansible_facts['os_family']=="Debian"
+    - ansible_facts['distribution_major_version']>= "24"
+
+- name: check the files access
+  command: cat /home/ubuntu/boa-user.txt
+  register: data_content
+
+- name: read the content and take a call
+  debug:
+    var: data_content.stdout
+  when: data_content.stdout.find('boaadmin') != -1
+
+

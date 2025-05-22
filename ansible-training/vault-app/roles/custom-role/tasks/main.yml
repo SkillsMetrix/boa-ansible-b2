@@ -1,0 +1,4 @@
+
+- name: readt the secret value
+  debug:
+    var: my_secret

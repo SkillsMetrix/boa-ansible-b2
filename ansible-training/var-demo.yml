@@ -1,0 +1,55 @@
+- name: vardemo
+  hosts: db
+  gather_facts: False
+  become: true
+
+  vars:
+    # String variable
+    username_firstname: 'amit kumar'
+    # boolean value
+    is_enabled: true
+    #list
+    users:
+      - admin
+      - manager
+      - qa
+    #dict var
+    users_pro:
+      admin: hr
+      manager: hrms
+      qa: finance
+    # newsted var
+
+    project_details:
+      - name: Banking
+        users:
+          - admin
+          - qa
+      - name: Gov
+        users:
+          - manager
+          - admin
+  #vars_files:
+    #- my-vars.yml
+  
+  tasks:
+    - name: print string value
+      debug:
+        var: username_firstname
+
+    - name: print array value
+      debug:
+        var: users
+
+    - name: print dict value
+      debug:
+        var: project_details
+    - name: print specific value
+      debug:
+        var: users[1]
+    - name: print external value
+      debug:
+        var: email
+    - name: print external value
+      debug:
+        var: username

@@ -1,0 +1,64 @@
+
+- name: Install Docker and Deploy FastAPI
+  hosts: web
+  become: true
+  vars:
+    app_dir: /opt/fastapi-app
+    image_name: fastapi-app
+    container_name: fastapi-container
+    ansible_user: ubuntu
+
+  tasks:
+    - name: update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        state: present
+
+    - name: ensure Docker is running and enabled
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add current user to docker group
+      user:
+        name: "{{ansible_user}}"
+        groups: docker
+        append: yes
+
+    - name: create app directory
+      file:
+        path: "{{app_dir}}"
+        state: directory
+        owner: "{{ansible_user}}"
+        mode: '0755'
+
+    - name: Copy FastAPI app code
+      copy:
+        src: ./app/
+        dest: "{{app_dir}}/"
+        owner: "{{ansible_user}}"
+        mode: '0755'
+
+    - name: Build Docker Image for FastAPI
+      command: docker build -t {{image_name}} .
+      args:
+        chdir: "{{app_dir}}"
+      
+    - name: Stop and remove existing container if any
+      shell: |
+        docker rm -f {{container_name}} || true
+
+    - name: Run FastAPI Docker container
+      command: >
+        docker run -d --name {{container_name}}
+        -p 8000:8000 {{image_name}} 
+
+
+
+
+    

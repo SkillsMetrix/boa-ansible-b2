@@ -1,0 +1,4 @@
+- hosts: "{{target_host}}"
+  become: true
+  roles:
+    - demo1-role

@@ -1,0 +1,60 @@
+---
+- name: Install Docker and Deploy FastAPI to Docker Hub (Remote)
+  hosts: localhost
+  become: true
+  vars:
+    dockerhub_username: "cammey20"
+    dockerhub_password: "Amar@123"  # Use Ansible Vault in production
+    app_dir: "/opt/fastapi-app"
+    image_name: "fastapi-app"
+    ansible_user: ubuntu
+    dockerhub_repo: "{{ dockerhub_username }}/{{ image_name }}"
+    tag: "latest"
+
+  tasks:
+    - name: Update APT cache
+      apt:
+        update_cache: yes
+
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Ensure Docker is running
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Add user to docker group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+
+    - name: Create app directory
+      file:
+        path: "{{ app_dir }}"
+        state: directory
+        owner: "{{ ansible_user }}"
+        mode: '0755'
+
+    - name: Copy FastAPI source code to remote
+      copy:
+        src: ./app/
+        dest: "{{ app_dir }}/"
+        mode: '0755'
+        owner: "{{ ansible_user }}"
+
+    - name: Log in to Docker Hub from remote host
+      docker_login:
+        username: "{{ dockerhub_username }}"
+        password: "{{ dockerhub_password }}"
+
+    # - name: Build and push Docker image to Docker Hub
+    #   community.docker.docker_image:
+    #     name: "{{ dockerhub_repo }}"
+    #     tag: "{{ tag }}"
+    #     path: "{{ app_dir }}"
+    #     push: true

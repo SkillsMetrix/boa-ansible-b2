@@ -1,0 +1,16 @@
+
+
+- hosts: web
+  become: true
+  tasks:
+    - name: install apache server
+      apt:
+        name:
+          - apache2
+        update_cache: yes
+        state: latest
+    - name: change the default HTML Page
+      copy:
+        src: index.html
+        dest: /var/www/html
+        mode: '0644'

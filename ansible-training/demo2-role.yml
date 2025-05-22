@@ -1,0 +1,5 @@
+- hosts: web
+  become: true
+  gather_facts: True
+  roles:
+    - demo2-role

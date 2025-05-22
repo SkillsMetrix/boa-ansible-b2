@@ -1,0 +1,15 @@
+- name: copy the files to the destination
+  template: src=ind.html dest=/home/ubuntu
+  register: result_data
+  ignore_errors: true
+
+- name: print the error
+  debug:
+    var: result_data
+
+- name: handle the error
+
+  template: src=upd.html dest=/home/ubuntu
+  failed_when:
+    - '"Could not find or access"  in result_data.msg'
+    - result_data.failed == true

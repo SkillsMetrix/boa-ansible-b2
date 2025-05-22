@@ -1,0 +1,3 @@
+- name: Print FastAPI installation success
+  debug:
+    msg: "FastAPI and Uvicorn were successfully installed in the virtual environment!"

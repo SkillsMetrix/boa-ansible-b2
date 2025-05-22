@@ -1,0 +1,6 @@
+#this subtask shall update the value from var to nginx html file
+
+- name: add the said message to the destination file
+  copy:
+    content: "{{message}}"
+    dest: /var/www/html/index.html
